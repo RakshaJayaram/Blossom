@@ -6,7 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +24,15 @@ public class User implements Serializable{
 	
 	@Id
 	@NotEmpty(message = "email must Not be empty")
+	@Email(message = "Please enter a valid Email Id")
 	private String email;
 	@NotEmpty(message = "userName must Not be empty")
 	private String userName;
 	@NotEmpty(message = "userAddress must Not be empty")
 	private String userAddress;
-	@NotEmpty(message = "userContact must Not be empty")
+	@NotEmpty(message = "Contact number must Not be empty")
+	@Size(min=10,max=10,message="Contact number should have 10 digits")
+	@Pattern(regexp = "^[0-9]+$",message="Contact number should contain 10 digits")
 	private String userContact;
 	private String enabled;
 	@NotEmpty(message = "password must Not be empty")

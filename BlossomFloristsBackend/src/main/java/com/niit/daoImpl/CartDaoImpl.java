@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import com.niit.dao.CartDao;
 import com.niit.model.Cart;
+import com.niit.model.Category;
+import com.niit.model.Product;
 
 @Repository("cartDao")
 @Transactional
@@ -71,9 +73,30 @@ public class CartDaoImpl implements CartDao{
 		}
 		
 	}
+	
+	public Cart getCartFromCartId(int cartid){
+		 Session session = sessionFactory.openSession();
+		 System.out.println("in cart dao cartId"+cartid);
+		 Query query = session.createQuery("from Cart where cartid =" + cartid);
+			Cart cart = (Cart) query.uniqueResult();
+			session.close();
+			return cart;
+	}
+	
+	//---------------------------------------//
+	public Cart getCartByCartId(Integer cartid) {
+		// TODO Auto-generated method stub
+		Session session=sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Cart cart=(Cart)session.get(Cart.class, cartid);
+		System.out.println("inside");
+		session.close();
+		return cart;
+	}
 
 	public Cart getCart(int cartId, String email) {
 		  Session session = sessionFactory.openSession();
+		  	System.out.println("in cart dao");
 		    Cart cart = null;
 		    try
 		    {

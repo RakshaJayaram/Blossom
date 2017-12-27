@@ -5,9 +5,11 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
@@ -24,9 +26,38 @@ import com.niit.model.User;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan("com")
+@PropertySource(value={"classpath:h2.properties","classpath:oracle.properties"})
+//@PropertySource(value="classpath:h2.properties")
 public class DBConfig {
 	
+	@Value("${h2.dc}")
+	//@Value("${oracle.dc}")
+	String driverClass;
+	
+	@Value("${h2.url}")
+	//@Value("${oracle.url}")
+	String url;
+	
+	@Value("${h2.un}")
+	//@Value("${oracle.un}")
+	String username;
+	
+	@Value("${h2.pwd}")
+	//@Value("${oracle.pwd}")
+	String password;
+	
 	@Bean("dataSource")
+	public DataSource getH2DataSource() {
+		DriverManagerDataSource driverMgrDataSource = new DriverManagerDataSource();
+		driverMgrDataSource.setDriverClassName(driverClass);
+		driverMgrDataSource.setUrl(url);
+		driverMgrDataSource.setUsername(username);
+		driverMgrDataSource.setPassword(password);
+		return driverMgrDataSource;
+
+	}
+	
+	/*@Bean("dataSource")
 	public DataSource getH2DataSource() {
 		DriverManagerDataSource driverMgrDataSource = new DriverManagerDataSource();
 		driverMgrDataSource.setDriverClassName("org.h2.Driver");
@@ -36,7 +67,7 @@ public class DBConfig {
 		return driverMgrDataSource;
 
 	}
-
+*/
 	@Bean(name = "sessionFactory")
 	public SessionFactory getSessionFactory() {
 		Properties hibernateProperties = new Properties();
@@ -53,7 +84,7 @@ public class DBConfig {
 		
 		localSessionFacBuilder.addAnnotatedClass(Orders.class);
 		localSessionFacBuilder.addAnnotatedClass(User.class);
-		
+		//localSessionFacBuilder.scanPackages("");
 		SessionFactory sessionFactory = localSessionFacBuilder.buildSessionFactory();
 		System.out.println("Session Factory Object Created");
 		System.out.println(sessionFactory);

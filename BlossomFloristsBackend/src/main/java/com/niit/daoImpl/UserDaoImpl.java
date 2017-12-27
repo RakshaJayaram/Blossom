@@ -3,6 +3,7 @@ package com.niit.daoImpl;
 
 import javax.transaction.Transactional;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,6 +16,7 @@ import com.niit.model.User;
 
 @Repository
 public class UserDaoImpl implements UserDao{
+	static Logger log = Logger.getLogger(UserDaoImpl.class.getName());
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -28,11 +30,12 @@ public class UserDaoImpl implements UserDao{
 	// Inserting User details into database
 	@Transactional
 	public void insertUser(User user) {
+		log.info("Before inserting user");
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		session.persist(user);
 		session.getTransaction().commit();
-
+		log.info("User inserted successfully");
 	}
 
 	public User getUserByUserId(String email) {

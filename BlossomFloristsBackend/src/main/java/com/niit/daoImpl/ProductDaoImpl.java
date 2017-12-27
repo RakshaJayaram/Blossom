@@ -56,10 +56,21 @@ public class ProductDaoImpl implements ProductDao{
 		return product;
 
 	}
+	
+	public Product getProductByName(String productName) {
+		Session session = sessionFactory.openSession();
+		// Product product = (Product) session.get(Product.class, productId);
+
+		Query query = session.createQuery("from Product  where productName='" + productName + "'");
+		Product product = (Product) query.uniqueResult();
+		session.close();
+		return product;
+
+	}
 
 	public boolean updateProduct(Product product) {
 		try {
-			System.out.println("ProductDao Update called***");
+			
 			Session session = sessionFactory.openSession();
 			session.beginTransaction();
 			session.update(product);
